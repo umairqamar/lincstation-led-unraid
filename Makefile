@@ -1,5 +1,5 @@
 VERSION ?= $(shell date +%Y.%m.%d)
-REPO    ?= OWNER/REPO
+REPO    ?= umairqamar/lincstation-led-unraid
 
 .PHONY: all test lint build clean
 

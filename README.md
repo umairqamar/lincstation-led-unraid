@@ -37,7 +37,7 @@ Other LincStation models may use a different controller. The plugin only writes 
 2. Paste this address and press **Install**:
 
    ```
-   https://github.com/OWNER/REPO/releases/latest/download/lincstation-led.plg
+   https://github.com/umairqamar/lincstation-led-unraid/releases/latest/download/lincstation-led.plg
    ```
 
 3. When it finishes, open **Settings > Utilities > LincStation LED**.
@@ -105,10 +105,10 @@ Leave out `-bind` to listen on all interfaces. There is no password, so only do 
 You need Go 1.21 or newer and Python 3.
 
 ```
-git clone https://github.com/OWNER/REPO.git
-cd REPO
+git clone https://github.com/umairqamar/lincstation-led-unraid.git
+cd lincstation-led-unraid
 make lint test       # needs bash, php and node for the lint step
-make build REPO=OWNER/REPO
+make build REPO=umairqamar/lincstation-led-unraid
 ```
 
 The package and installer are written to `dist/`. The Go code has no third-party dependencies and builds to one static binary.
@@ -124,7 +124,3 @@ The register map is in [docs/PROTOCOL.md](docs/PROTOCOL.md). It was worked out b
 ## Disclaimer
 
 This is an independent project. It is not made, endorsed or supported by LincStation or Lime Technology (Unraid). Product names and the device drawing used for the icon belong to their owners. The plugin writes only to the LED registers listed in the protocol notes, but you use it at your own risk.
-
-## Licence
-
-[MIT](LICENSE)

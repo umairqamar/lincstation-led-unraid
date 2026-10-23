@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the Unraid plugin package and installer.
 
-    python3 scripts/build.py --version 2026.10.23 --repo OWNER/REPO
+    python3 scripts/build.py --version 2026.10.23 --repo umairqamar/lincstation-led-unraid
 
 Writes dist/lincstation-led-<version>-x86_64-1.txz, dist/lincstation-led.plg and dist/SHA256SUMS.
 The Go binary is built from go/ unless --binary points at a ready-made static one.
@@ -147,13 +147,11 @@ def make_plg(version, repo, sha, changes, dist):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--version", default=datetime.date.today().strftime("%Y.%m.%d"), help="plugin version, e.g. 2026.10.23")
-    ap.add_argument("--repo", default=os.environ.get("GITHUB_REPOSITORY", "OWNER/REPO"), help="GitHub owner/repo that hosts the releases")
+    ap.add_argument("--repo", default=os.environ.get("GITHUB_REPOSITORY", "umairqamar/lincstation-led-unraid"), help="GitHub owner/repo that hosts the releases")
     ap.add_argument("--binary", help="use this static binary instead of building go/")
     ap.add_argument("--changes", default="- See the release notes on GitHub.", help="text for the plugin changelog")
     ap.add_argument("--out", default=os.path.join(ROOT, "dist"))
     a = ap.parse_args()
-    if a.repo == "OWNER/REPO":
-        print("warning: --repo not set, the installer will point at OWNER/REPO", file=sys.stderr)
     os.makedirs(a.out, exist_ok=True)
     binary = a.binary
     if not binary:
