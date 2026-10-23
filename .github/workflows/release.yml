@@ -1,0 +1,30 @@
+name: Release
+# Push a tag such as v2026.10.23 to build the package and publish a GitHub release.
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+          cache-dependency-path: go/go.mod
+      - name: Test
+        run: make lint test
+      - name: Build
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          python3 scripts/build.py --version "$VERSION" --repo "$GITHUB_REPOSITORY" \
+            --changes "- See https://github.com/$GITHUB_REPOSITORY/releases/tag/$GITHUB_REF_NAME"
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            dist/lincstation-led-*.txz dist/lincstation-led.plg dist/SHA256SUMS \
+            --title "$GITHUB_REF_NAME" --generate-notes

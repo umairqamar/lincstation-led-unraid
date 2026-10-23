@@ -1,0 +1,22 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+          cache-dependency-path: go/go.mod
+      - name: Lint and test
+        run: make lint test
+      - name: Build package
+        run: python3 scripts/build.py --version 0.0.0-ci --repo ${{ github.repository }}
+      - name: Check the installer is valid XML
+        run: python3 -c "import xml.dom.minidom as m; m.parse('dist/lincstation-led.plg')"

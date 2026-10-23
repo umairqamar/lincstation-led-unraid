@@ -1,0 +1,31 @@
+#!/bin/bash
+# /etc/rc.d/rc.lincstation-led : re-apply the saved light bar state (no background service, no network port)
+NAME=lincstation-led
+BIN=/usr/local/sbin/$NAME
+PLG=/boot/config/plugins/$NAME
+STATE=$PLG/state
+LEGACY_STATE=/boot/config/lincstation-led/state
+
+restore() {
+  icon
+  [[ -x $BIN ]] || { echo "$BIN is missing" >&2; return 1; }
+  mkdir -p "$STATE"
+  # one-time migration of state saved by the older standalone service
+  if [[ ! -f $STATE/rgb && -f $LEGACY_STATE/rgb ]]; then cp -n "$LEGACY_STATE"/* "$STATE"/ 2>/dev/null; fi
+  "$BIN" restore -state-dir "$STATE" && echo "$NAME: light state restored"
+}
+
+# Pick the menu icon that suits the current Unraid theme (white and azure are light themes).
+icon() {
+  local theme img=/usr/local/emhttp/plugins/$NAME/images pick=icon-for-dark-themes.png
+  theme=$(grep -E '^theme=' /boot/config/plugins/dynamix/dynamix.cfg 2>/dev/null | tail -n 1 | cut -d= -f2 | tr -d '"\r ')
+  case "$theme" in white|azure) pick=icon-for-light-themes.png ;; esac
+  [[ -f $img/$pick ]] && cp -f "$img/$pick" "$img/$NAME.png"
+}
+
+case "$1" in
+  start|restart|restore) restore ;;
+  stop) : ;;
+  status) [[ -x $BIN ]] && echo "installed" || { echo "missing"; exit 1; } ;;
+  *) echo "usage: $0 start|restore|status"; exit 1 ;;
+esac

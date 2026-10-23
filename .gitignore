@@ -1,0 +1,4 @@
+dist/
+go/lincstation-led
+*.txz
+*.log

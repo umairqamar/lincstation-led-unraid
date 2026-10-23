@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.
+# Line up the first '|' above the ':' following the base package name, and
+# the '|' on the right side marks the last column you can put a character in.
+# You must make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':' except on otherwise blank lines.
+
+                |-----handy-ruler------------------------------------------------------|
+lincstation-led: lincstation-led (LincStation N1 LED control)
+lincstation-led:
+lincstation-led: Colour and effect picker for the LincStation N1 light bar.
+lincstation-led: Talks to the LED controller directly over I2C: no background
+lincstation-led: service and no network port. Settings, Utilities, LincStation LED.
+lincstation-led:
+lincstation-led: Replacement for the vendor go_8130_led_linux service.
+lincstation-led:
+lincstation-led:
+lincstation-led:
+lincstation-led:

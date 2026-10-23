@@ -1,0 +1,84 @@
+Menu="Utilities"
+Title="LincStation LED"
+Icon="lincstation-led.png"
+Markdown="false"
+---
+<?php
+$plugin = 'lincstation-led';
+$jsFile = "/usr/local/emhttp/plugins/$plugin/js/$plugin.js";
+// Menu icon follows the theme: white drawing on dark themes, black drawing on light themes.
+$theme = $display['theme'] ?? 'black';
+$img   = "/usr/local/emhttp/plugins/$plugin/images/";
+$src   = $img . (in_array($theme, ['white', 'azure'], true) ? 'icon-for-light-themes.png' : 'icon-for-dark-themes.png');
+if (is_file($src) && @md5_file($src) !== @md5_file($img . "$plugin.png")) { @copy($src, $img . "$plugin.png"); }
+?>
+<style>
+#ls-wrap h3 { margin: 18px 0 8px; }
+#ls-wrap .ls-effects { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0 20px; }
+#ls-wrap .ls-fx { border: 2px solid #888; border-radius: 8px; padding: 10px 16px; min-width: 120px; text-align: center; cursor: pointer; background: transparent; color: inherit; font: inherit; }
+#ls-wrap .ls-fx i { display: block; font-size: 22px; margin-bottom: 4px; }
+#ls-wrap .ls-fx.sel { border-color: #ff8c2f; box-shadow: 0 0 0 1px #ff8c2f; font-weight: bold; }
+#ls-wrap .ls-pick { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+#ls-wrap .ls-hex { width: 320px; max-width: 100%; height: auto; display: block; }
+#ls-wrap .ls-hex polygon { stroke: rgba(0,0,0,.25); stroke-width: .6; cursor: pointer; }
+#ls-wrap .ls-hex polygon:hover { stroke: #fff; stroke-width: 1.4; }
+#ls-wrap .ls-hex polygon.sel { stroke: #fff; stroke-width: 2; }
+#ls-wrap .ls-side { min-width: 190px; }
+#ls-wrap .ls-chip { width: 100%; height: 44px; border-radius: 8px; border: 2px solid #888; margin-bottom: 10px; }
+#ls-wrap .ls-hexin { width: 110px; font-family: monospace; text-transform: uppercase; }
+#ls-wrap .ls-presets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; max-width: 230px; }
+#ls-wrap .ls-preset { width: 34px; height: 22px; border: 2px solid #888; border-radius: 4px; cursor: pointer; padding: 0; }
+#ls-wrap .ls-preset.sel { border-color: #ff8c2f; box-shadow: 0 0 0 2px #ff8c2f; }
+#ls-wrap input[type=range] { width: 260px; vertical-align: middle; }
+#ls-wrap .ls-msg { margin-left: 12px; font-weight: bold; }
+#ls-wrap .ls-ok { color: #4c9f38; }
+#ls-wrap .ls-bad { color: #cc3333; }
+</style>
+<div id="ls-wrap">
+
+<h3>Effect</h3>
+<div class="ls-effects">
+<button type="button" class="ls-fx" data-mode="normal"><i class="fa fa-circle"></i>Steady</button>
+<button type="button" class="ls-fx" data-mode="breath"><i class="fa fa-heartbeat"></i>Breathing</button>
+<button type="button" class="ls-fx" data-mode="loop"><i class="fa fa-exchange"></i>Colour fade</button>
+<button type="button" class="ls-fx" data-mode="off"><i class="fa fa-power-off"></i>Off</button>
+</div>
+
+<div id="ls-colour-block">
+<h3>Colour</h3>
+<div class="ls-pick" data-slot="0">
+<div class="ls-hexhost"></div>
+<div class="ls-side">
+<div class="ls-chip"></div>
+<input type="text" class="ls-hexin" maxlength="7" spellcheck="false"> <input type="color" class="ls-native" title="System colour picker" style="width:44px;height:28px;padding:0;vertical-align:middle">
+<div class="ls-presets"></div>
+</div>
+</div>
+
+<div id="ls-c1-block">
+<h3>Fade to</h3>
+<div class="ls-pick" data-slot="1">
+<div class="ls-hexhost"></div>
+<div class="ls-side">
+<div class="ls-chip"></div>
+<input type="text" class="ls-hexin" maxlength="7" spellcheck="false"> <input type="color" class="ls-native" title="System colour picker" style="width:44px;height:28px;padding:0;vertical-align:middle">
+<div class="ls-presets"></div>
+</div>
+</div>
+</div>
+
+<div id="ls-bright-block">
+<h3>Brightness</h3>
+<input type="range" id="ls-light" min="1" max="255" value="200"> <span id="ls-light-val">200</span>
+</div>
+</div>
+
+<h3>Colour matching</h3>
+<label><input type="checkbox" id="ls-gamma" checked> Match screen colours</label>
+<br><small>LEDs are brighter in the middle of their range than a screen is, so pastel colours look washed out. This corrects for that. Untick it to send the exact values instead.</small>
+
+<p><span class="ls-msg" id="ls-msg"></span></p>
+<p><small>Changes apply straight away and are remembered across reboots. The plugin talks to the LED controller directly; nothing listens on the network.</small></p>
+
+</div>
+<script src="/plugins/<?=$plugin?>/js/<?=$plugin?>.js?v=<?=is_file($jsFile) ? filemtime($jsFile) : 0?>"></script>
